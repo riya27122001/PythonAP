@@ -1,0 +1,1548 @@
+#LyX 2.0 created this file. For more info see http://www.lyx.org/
+\lyxformat 413
+\begin_document
+\begin_header
+\textclass article
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\float_placement H
+\paperfontsize 12
+\spacing single
+\use_hyperref false
+\papersize a4paper
+\use_geometry true
+\use_amsmath 1
+\use_esint 1
+\use_mhchem 1
+\use_mathdots 1
+\cite_engine basic
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 1.25cm
+\topmargin 1.25cm
+\rightmargin 1.25cm
+\bottommargin 1.25cm
+\headheight 1.25cm
+\headsep 1.25cm
+\footskip 1.25cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+APPLIED PROGRAMMING LAB
+\begin_inset Newline newline
+\end_inset
+
+(Week - 3)
+\begin_inset Newline newline
+\end_inset
+
+Fourier Coefficients
+\end_layout
+
+\begin_layout Author
+Shubhangi Ghosh
+\begin_inset Newline newline
+\end_inset
+
+EE15B129
+\begin_inset Newline newline
+\end_inset
+
+Department of Electrical Engineering
+\end_layout
+
+\begin_layout Section
+INTRODUCTION:
+\end_layout
+
+\begin_layout Standard
+This report presents two methods of computing Fourier series coefficients.
+ A function 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+$f(x)$
+\end_layout
+
+\end_inset
+
+ can be represented as a Fouriers series, 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+$i.e.$
+\end_layout
+
+\end_inset
+
+ a summation of cosine and sine functions as:
+\begin_inset Formula 
+\[
+f(x)=a_{0}+{\textstyle {\displaystyle \sum_{n=1}^{\infty}}\{a_{n}cos(nx)}+b_{n}sin(nx)\}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Functions:
+\end_layout
+
+\begin_layout Standard
+In this code, computation of Fourier coefficients are illustrated for the
+ functions:
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+$e^x$
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+$cos(cosx))$
+\end_layout
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Subsection
+Methods Illustrated for computing Fourier Coefficients:
+\end_layout
+
+\begin_layout Standard
+The two methods presented in this report are:
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+textbf{Computation of coefficients by Integration:}
+\end_layout
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula 
+\[
+a_{0}=\frac{1}{2\pi}\int_{0}^{2\pi}f(x)dx
+\]
+
+\end_inset
+
+ 
+\begin_inset Formula 
+\[
+a_{n}=\frac{1}{\pi}\int_{0}^{2\pi}f(x)cos(nx)dx
+\]
+
+\end_inset
+
+ 
+\begin_inset Formula 
+\[
+b_{n}=\frac{1}{\pi}\int_{0}^{2\pi}f(x)sin(nx)dx
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+textbf{Least Squares Approximation:}
+\end_layout
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\left(\begin{array}{cccccc}
+1 & cos(x_{1}) & sin(x_{1}) & ... & cos(25x_{1}) & sin(25x_{1})\\
+1 & cos(x_{2}) & sin(x_{2}) & ... & cos(25x_{2}) & sin(25x_{2})\\
+... & ... & ... & ... & ... & ...\\
+1 & cos(x_{400}) & sin(x_{400}) & ... & cos(25x_{400}) & sin(25x_{400})
+\end{array}\right)\left(\begin{array}{c}
+a_{0}\\
+a_{1}\\
+b_{1}\\
+...\\
+a_{25}\\
+b_{25}
+\end{array}\right)=\left(\begin{array}{c}
+f(x_{1})\\
+f(x_{2})\\
+...\\
+f(x_{400})
+\end{array}\right)
+\]
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+We want to solve,
+\begin_inset Formula 
+\[
+Ac=b,
+\]
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+where,
+\begin_inset Formula 
+\[
+A-the\, matrix\, on\, the\, left\, hand\, side
+\]
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula 
+\[
+c-the\, matrix\, of\, Fourier\, coefficients
+\]
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula 
+\[
+b-the\, matrix\, of\, function\, values
+\]
+
+\end_inset
+
+This can be solved by 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+textit{Least Squares Approximation}
+\end_layout
+
+\end_inset
+
+ by solving the equation:
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula 
+\[
+A^{*}Ac=A^{*}b
+\]
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Python provides the function lstsq in its 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+textit{numpy.linalg}
+\end_layout
+
+\end_inset
+
+ library.
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+BRIEF CODE EXPLANATION:
+\end_layout
+
+\begin_layout Standard
+The following steps have been followed in the code:
+\end_layout
+
+\begin_layout Enumerate
+First, we define functions which return 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+$e^x$
+\end_layout
+
+\end_inset
+
+ and 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+$cos(cosx)$
+\end_layout
+
+\end_inset
+
+ on passing 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+$x$
+\end_layout
+
+\end_inset
+
+ as an argument.
+\end_layout
+
+\begin_layout Enumerate
+Then, we define a function, 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+$f_coeff$
+\end_layout
+
+\end_inset
+
+ which computes Fourier coefficients by method of integration.
+\end_layout
+
+\begin_layout Enumerate
+Then, we write code for computing Fourier coefficients by Least Square Approxima
+tion.
+\end_layout
+
+\begin_layout Enumerate
+The fourier coefficients as computed by integration are stored in 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+$ans_exp$
+\end_layout
+
+\end_inset
+
+ for periodic exponential function 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+$e^x over the interval [0,2
+\backslash
+pi)$
+\end_layout
+
+\end_inset
+
+ and 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+$ans_cos$
+\end_layout
+
+\end_inset
+
+ for 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+$cos(cosx) over the interval [0,2
+\backslash
+pi)$
+\end_layout
+
+\end_inset
+
+ .
+\end_layout
+
+\begin_layout Enumerate
+Then, we plot Fourier coefficients computed by integration and that by Least
+ square approximation on a semilog plot 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+$w.r.t$
+\end_layout
+
+\end_inset
+
+ n and compare.
+\end_layout
+
+\begin_layout Enumerate
+We do the same in a log-log plot.
+\end_layout
+
+\begin_layout Enumerate
+Then, we plot the error in the coefficients as computed by integration and
+ least square approximations for both functions.
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+CODE:
+\end_layout
+
+\begin_layout LyX-Code
+#Importing header files
+\end_layout
+
+\begin_layout LyX-Code
+import numpy as np
+\end_layout
+
+\begin_layout LyX-Code
+from scipy import *
+\end_layout
+
+\begin_layout LyX-Code
+from matplotlib.pyplot import *
+\end_layout
+
+\begin_layout LyX-Code
+from scipy.integrate import quad
+\end_layout
+
+\begin_layout LyX-Code
+from math import *
+\end_layout
+
+\begin_layout LyX-Code
+#Exponential Function
+\end_layout
+
+\begin_layout LyX-Code
+def expo(x):
+\end_layout
+
+\begin_layout LyX-Code
+	return e**x
+\end_layout
+
+\begin_layout LyX-Code
+#cos(cos(x)) Funxtion
+\end_layout
+
+\begin_layout LyX-Code
+def cosine(x):
+\end_layout
+
+\begin_layout LyX-Code
+	return np.cos(np.cos(x))
+\end_layout
+
+\begin_layout LyX-Code
+#Returns f(x)cos(x)
+\end_layout
+
+\begin_layout LyX-Code
+def u(x,func,k):
+\end_layout
+
+\begin_layout LyX-Code
+	return func(x)*np.cos(k*x)
+\end_layout
+
+\begin_layout LyX-Code
+#Return f(x)sin(x)
+\end_layout
+
+\begin_layout LyX-Code
+def v(x,func,k):
+\end_layout
+
+\begin_layout LyX-Code
+	return func(x)*np.sin(k*x)
+\end_layout
+
+\begin_layout LyX-Code
+#Finding 2*n+1 fourier coefficients for func(x) i.e.
+ a0,a1,..an and b1,b2,..bn
+\end_layout
+
+\begin_layout LyX-Code
+def f_coeff(func,n):
+\end_layout
+
+\begin_layout LyX-Code
+	a = []
+\end_layout
+
+\begin_layout LyX-Code
+	
+\end_layout
+
+\begin_layout LyX-Code
+	a.append((1/(2*pi))*quad(func,0,2*pi)[0]) #a0
+\end_layout
+
+\begin_layout LyX-Code
+	for k in range(1,n+1):
+\end_layout
+
+\begin_layout LyX-Code
+		a.append((1/pi)*quad(u,0,2*pi,args=(func,k))[0]) #ak
+\end_layout
+
+\begin_layout LyX-Code
+		a.append((1/pi)*quad(v,0,2*pi,args=(func,k))[0]) #bk
+\end_layout
+
+\begin_layout LyX-Code
+	return a
+\end_layout
+
+\begin_layout LyX-Code
+#Fourier coeffcients for e^x
+\end_layout
+
+\begin_layout LyX-Code
+ans_exp = f_coeff(expo,25)
+\end_layout
+
+\begin_layout LyX-Code
+n= range(0,26) #Indices of fourier coefficients
+\end_layout
+
+\begin_layout LyX-Code
+#Fourier coeffcients for cos(cos(x))
+\end_layout
+
+\begin_layout LyX-Code
+ans_cos = f_coeff(cosine,25)
+\end_layout
+
+\begin_layout LyX-Code
+#Fourier coefficients by Least Square Approximation
+\end_layout
+
+\begin_layout LyX-Code
+#Creating a linearly spaced array with 400 points between 0 and 2*pi
+\end_layout
+
+\begin_layout LyX-Code
+x = linspace(0,2*pi,400)
+\end_layout
+
+\begin_layout LyX-Code
+b = expo(x) #exponential func for vector
+\end_layout
+
+\begin_layout LyX-Code
+A = zeros((400,51)) # allocate a matrix A with zeroes
+\end_layout
+
+\begin_layout LyX-Code
+A[:,0] = 1 #first column is 1s
+\end_layout
+
+\begin_layout LyX-Code
+for k in range(1,26):
+\end_layout
+
+\begin_layout LyX-Code
+	A[:,2*k-1] = np.cos(k*x) #cos(kx) column
+\end_layout
+
+\begin_layout LyX-Code
+	A[:,2*k] = np.sin(k*x) #sin(kx) column
+\end_layout
+
+\begin_layout LyX-Code
+c = np.linalg.lstsq(A,b)[0] #[0] gives first col of lstsq which is the best
+ fit vector
+\end_layout
+
+\begin_layout LyX-Code
+a_coeff = np.fabs(insert(c[1::2],0,c[0])) #extracting a0,a1,...an in an array
+\end_layout
+
+\begin_layout LyX-Code
+#plotting first 51 fourier coefficients for e^x in semilog scale
+\end_layout
+
+\begin_layout LyX-Code
+title('Fourier Coefficients for $e^x$')
+\end_layout
+
+\begin_layout LyX-Code
+xlabel('$n$')
+\end_layout
+
+\begin_layout LyX-Code
+ylabel('First 51 Fourier Coefficients')
+\end_layout
+
+\begin_layout LyX-Code
+semilogy(n,np.fabs([ans_exp[0]]+ans_exp[1::2]),'bo') #an
+\end_layout
+
+\begin_layout LyX-Code
+semilogy(n[1:],np.fabs(ans_exp[2::2]),'ro') #bn
+\end_layout
+
+\begin_layout LyX-Code
+semilogy(n,a_coeff,'go') #least square an
+\end_layout
+
+\begin_layout LyX-Code
+semilogy(n[1:],np.fabs(c[2::2]),'go') #least square bn
+\end_layout
+
+\begin_layout LyX-Code
+legend(('$a_n$','$b_n$','Least square solution'),loc='best')
+\end_layout
+
+\begin_layout LyX-Code
+savefig('fig1_exp.pdf',format='pdf') #save figure as pdf
+\end_layout
+
+\begin_layout LyX-Code
+show()
+\end_layout
+
+\begin_layout LyX-Code
+#plotting first 51 fourier coefficients for e^x in loglog scale
+\end_layout
+
+\begin_layout LyX-Code
+title('Fourier Coefficients for $e^x$')
+\end_layout
+
+\begin_layout LyX-Code
+xlabel('$n$')
+\end_layout
+
+\begin_layout LyX-Code
+ylabel('First 51 Fourier Coefficients')
+\end_layout
+
+\begin_layout LyX-Code
+loglog(n,np.fabs([ans_exp[0]]+ans_exp[1::2]),'bo') #an
+\end_layout
+
+\begin_layout LyX-Code
+loglog(n[1:],np.fabs(ans_exp[2::2]),'ro') #bn
+\end_layout
+
+\begin_layout LyX-Code
+loglog(n,a_coeff,'go') #least square an
+\end_layout
+
+\begin_layout LyX-Code
+loglog(n[1:],np.fabs(c[2::2]),'go') #least square bn
+\end_layout
+
+\begin_layout LyX-Code
+legend(('$a_n$','$b_n$','Least square solution'),loc='best')
+\end_layout
+
+\begin_layout LyX-Code
+savefig('fig2_exp.pdf',format='pdf') #save figure as pdf
+\end_layout
+
+\begin_layout LyX-Code
+show()
+\end_layout
+
+\begin_layout LyX-Code
+#error plot for first 51 fourier coefficients for e^x in semilog scale
+\end_layout
+
+\begin_layout LyX-Code
+title('Absolute value of error in Fourier Coefficients for $e^x$')
+\end_layout
+
+\begin_layout LyX-Code
+xlabel('$n$')
+\end_layout
+
+\begin_layout LyX-Code
+ylabel('Error')
+\end_layout
+
+\begin_layout LyX-Code
+error = np.fabs(ans_exp-c)
+\end_layout
+
+\begin_layout LyX-Code
+semilogy(n,insert(error[1::2],0,error[0]),'bo') #an
+\end_layout
+
+\begin_layout LyX-Code
+semilogy(n[1:],error[2::2],'ro') #bn
+\end_layout
+
+\begin_layout LyX-Code
+legend(('Error in $a_n$','Error in $b_n$'),loc='best')
+\end_layout
+
+\begin_layout LyX-Code
+savefig('error_exp.pdf',format='pdf') #save figure as pdf
+\end_layout
+
+\begin_layout LyX-Code
+show()
+\end_layout
+
+\begin_layout LyX-Code
+#printing maximum error for e^x
+\end_layout
+
+\begin_layout LyX-Code
+print "Maximum error between Coefficients found by Integration and Least
+ Squares Method:"
+\end_layout
+
+\begin_layout LyX-Code
+print 'e^x:'
+\end_layout
+
+\begin_layout LyX-Code
+print np.amax(error)
+\end_layout
+
+\begin_layout LyX-Code
+b = cosine(x) #cos(cos(x)) func for vector
+\end_layout
+
+\begin_layout LyX-Code
+c = np.linalg.lstsq(A,b)[0] #[0] gives first col of lstsq which is the best
+ fit vector
+\end_layout
+
+\begin_layout LyX-Code
+a_coeff = np.fabs(insert(c[1::2],0,c[0])) #extracting a0,a1,...an in an array
+\end_layout
+
+\begin_layout LyX-Code
+title('Fourier Coefficients for $cos(cos(x))$')
+\end_layout
+
+\begin_layout LyX-Code
+xlabel('$n$')
+\end_layout
+
+\begin_layout LyX-Code
+ylabel('First 51 Fourier Coefficients')
+\end_layout
+
+\begin_layout LyX-Code
+#plotting first 51 fourier coefficients for cos(cos(x)) in semilog scale
+\end_layout
+
+\begin_layout LyX-Code
+semilogy(n,np.fabs([ans_cos[0]]+ans_cos[1::2]),'bo') #an
+\end_layout
+
+\begin_layout LyX-Code
+semilogy(n[1:],np.fabs(ans_cos[2::2]),'ro') #bn
+\end_layout
+
+\begin_layout LyX-Code
+semilogy(n,a_coeff,'go') #least square an
+\end_layout
+
+\begin_layout LyX-Code
+semilogy(n[1:],np.fabs(c[2::2]),'go') #least square bn
+\end_layout
+
+\begin_layout LyX-Code
+legend(('$a_n$','$b_n$','Least square solution'),loc='best')
+\end_layout
+
+\begin_layout LyX-Code
+savefig('fig1_cos(cos).pdf',format='pdf') #save figure as pdf
+\end_layout
+
+\begin_layout LyX-Code
+show()
+\end_layout
+
+\begin_layout LyX-Code
+title('Fourier Coefficients for $cos(cos(x))$')
+\end_layout
+
+\begin_layout LyX-Code
+xlabel('$n$')
+\end_layout
+
+\begin_layout LyX-Code
+ylabel('First 51 Fourier Coefficients')
+\end_layout
+
+\begin_layout LyX-Code
+loglog(n,np.fabs([ans_cos[0]]+ans_cos[1::2]),'bo') #an
+\end_layout
+
+\begin_layout LyX-Code
+loglog(n[1:],np.fabs(ans_cos[2::2]),'ro') #bn
+\end_layout
+
+\begin_layout LyX-Code
+loglog(n,a_coeff,'go') #least square an
+\end_layout
+
+\begin_layout LyX-Code
+loglog(n[1:],np.fabs(c[2::2]),'go') #least square bn
+\end_layout
+
+\begin_layout LyX-Code
+legend(('$a_n$','$b_n$','Least square solution'),loc='best')
+\end_layout
+
+\begin_layout LyX-Code
+savefig('fig2_cos(cos).pdf',format='pdf') #save figure as pdf
+\end_layout
+
+\begin_layout LyX-Code
+show()
+\end_layout
+
+\begin_layout LyX-Code
+#error plot for first 51 fourier coefficients for cos(cos(x)) in semilog
+ scale
+\end_layout
+
+\begin_layout LyX-Code
+title('Absolute value of error in Fourier Coefficients for $cos(cos(x))$')
+\end_layout
+
+\begin_layout LyX-Code
+xlabel('$n$')
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+ylabel('Error')
+\end_layout
+
+\end_deeper
+\begin_layout LyX-Code
+error = np.fabs(ans_cos-c)
+\end_layout
+
+\begin_layout LyX-Code
+#printing maximum error for e^x
+\end_layout
+
+\begin_layout LyX-Code
+print 'cos(cos(x)):'
+\end_layout
+
+\begin_layout LyX-Code
+print np.amax(error)
+\end_layout
+
+\begin_layout LyX-Code
+semilogy(n,insert(error[1::2],0,error[0]),'bo')
+\end_layout
+
+\begin_layout LyX-Code
+semilogy(n[1:],error[2::2],'ro')
+\end_layout
+
+\begin_layout LyX-Code
+legend(('Error in $a_n$','Error in $b_n$'),loc='best')
+\end_layout
+
+\begin_layout LyX-Code
+savefig('error_cos(cos)).pdf',format='pdf') #save figure as pdf
+\end_layout
+
+\begin_layout LyX-Code
+show()
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+PLOTS:
+\end_layout
+
+\begin_layout Subsubsection
+Plot of Fourier Coefficients of 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+$e^x$
+\end_layout
+
+\end_inset
+
+ as computed by Integration and Least Squares Method
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "Semilog Plot"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename fig1_exp.pdf
+	scale 75
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "Log-log"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename fig2_exp.pdf
+	scale 75
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Plot of Fourier Coefficients of 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+$cos(cos x)$
+\end_layout
+
+\end_inset
+
+ as computed by Integration and Least Squares Method
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "Semilog Plot - cos(cos x)"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename fig1_cos(cos).pdf
+	scale 75
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "Log-log- cos(cos x)"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename fig2_cos(cos).pdf
+	scale 75
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Plot of error in Fourier Coefficients of 
+\begin_inset Formula $e^{x}$
+\end_inset
+
+and 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+$cos(cos x)$
+\end_layout
+
+\end_inset
+
+ as computed by Integration and Least Squares Method
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "$e^x$"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename error_exp.pdf
+	scale 75
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "cos(cos x)"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename error_cos(cos)).pdf
+	scale 75
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+ERROR ANALYSIS:
+\end_layout
+
+\begin_layout Enumerate
+The value of maximum error in 
+\begin_inset Formula $e^{x}$
+\end_inset
+
+is 1.33273087034.
+\end_layout
+
+\begin_layout Enumerate
+The value of maximum error in 
+\begin_inset Formula $cos(cos\, x)$
+\end_inset
+
+ is 
+\begin_inset Formula $2.57022928446\, x\,10^{-15}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Section
+RESULTS AND DISCUSSION:
+\end_layout
+
+\begin_layout Subsection
+Question 1.
+\end_layout
+
+\begin_layout LyX-Code
+Why are the 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+$b_n$
+\end_layout
+
+\end_inset
+
+ coefficients nearly zero for 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+$cos(cos(x))$
+\end_layout
+
+\end_inset
+
+?
+\end_layout
+
+\begin_layout LyX-Code
+Ans.
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+$cos(cos(x))$
+\end_layout
+
+\end_inset
+
+ is an even function.
+ Hence, the 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+$b_n$
+\end_layout
+
+\end_inset
+
+ terms, being the 
+\begin_inset Newline newline
+\end_inset
+
+coefficients of sine terms, which are odd functions are essentially.
+ 
+\begin_inset Newline newline
+\end_inset
+
+But, since integration by quad function is not exact, we obtain values
+\begin_inset Newline newline
+\end_inset
+
+ very close to zero.
+\end_layout
+
+\begin_layout Subsection
+Question 2.
+\end_layout
+
+\begin_layout LyX-Code
+Why are the don't the coefficients of 
+\begin_inset Formula $e^{x}$
+\end_inset
+
+ not decay quickly in semilog plot?
+\end_layout
+
+\begin_layout LyX-Code
+Ans.
+ Substantial high frequency components exist for 
+\begin_inset Formula $e^{x}$
+\end_inset
+
+, hence coefficients don't
+\begin_inset Newline newline
+\end_inset
+
+ decay quickly wrt n.
+\end_layout
+
+\begin_layout Subsection
+Question 3.
+\end_layout
+
+\begin_layout LyX-Code
+Why is the log-log plot of 
+\begin_inset Formula $e^{x}$
+\end_inset
+
+ linear?
+\end_layout
+
+\begin_layout LyX-Code
+Ans.
+ The coefficients of 
+\begin_inset Formula $e^{x}$
+\end_inset
+
+ vary as 
+\begin_inset Formula $\frac{1}{1+n^{2}}$
+\end_inset
+
+.
+ This can be approximated as 
+\begin_inset Formula $\frac{1}{n^{2}}$
+\end_inset
+
+ for large 
+\begin_inset Formula $n$
+\end_inset
+
+.
+\begin_inset Formula 
+\[
+a_{n}=\frac{1}{n^{2}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+\begin_inset Formula 
+\[
+log\, a_{n}=-2log\, n
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+Thus, the 
+\begin_inset Formula $a_{n}vs.\, n$
+\end_inset
+
+ plot is an approximately linear plot of slope 
+\begin_inset Formula $-2$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection
+Question 4.
+\end_layout
+
+\begin_layout LyX-Code
+Why are 
+\begin_inset Formula $b_{n}$
+\end_inset
+
+ coefficients larger than 
+\begin_inset Formula $a_{n}$
+\end_inset
+
+ coefficients?
+\end_layout
+
+\begin_layout LyX-Code
+Ans.
+ The 
+\begin_inset Formula $b_{n}$
+\end_inset
+
+ coefficients being larger 
+\begin_inset Formula $a_{n}$
+\end_inset
+
+coefficients imply that the odd part of the 
+\begin_inset Newline newline
+\end_inset
+
+function 
+\begin_inset Formula $e^{x}$
+\end_inset
+
+ periodic in the interval 
+\begin_inset Formula $[0,2\pi)$
+\end_inset
+
+ has a larger magnitude than the 
+\begin_inset Newline newline
+\end_inset
+
+even part of the function.
+ 
+\end_layout
+
+\begin_layout Subsection
+Question 5.
+\end_layout
+
+\begin_layout LyX-Code
+Should the coefficients agree as computed by Least Squares Approximation
+ Method and by Integration?
+\end_layout
+
+\begin_layout LyX-Code
+Ans.
+ The coefficients need not agree.
+\end_layout
+
+\begin_layout Enumerate
+The value of maximum error in 
+\begin_inset Formula $e^{x}$
+\end_inset
+
+is 1.33273087034.
+\end_layout
+
+\begin_layout Enumerate
+The value of maximum error in 
+\begin_inset Formula $cos(cos\, x)$
+\end_inset
+
+ is 
+\begin_inset Formula $2.57022928446\, x\,10^{-15}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout LyX-Code
+But Least Square is a very good approximation, when actual integration is
+ not feasible.
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\end_body
+\end_document

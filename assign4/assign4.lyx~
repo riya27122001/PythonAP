@@ -1,0 +1,1415 @@
+#LyX 2.0 created this file. For more info see http://www.lyx.org/
+\lyxformat 413
+\begin_document
+\begin_header
+\textclass article
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_amsmath 1
+\use_esint 1
+\use_mhchem 1
+\use_mathdots 1
+\cite_engine basic
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+APPLIED PROGRAMMING LAB
+\begin_inset Newline newline
+\end_inset
+
+(Week - 4)
+\begin_inset Newline newline
+\end_inset
+
+Bessel Index Approximation
+\end_layout
+
+\begin_layout Author
+Shubhangi Ghosh
+\begin_inset Newline newline
+\end_inset
+
+EE15B129
+\begin_inset Newline newline
+\end_inset
+
+Department of Electrical Engineering
+\end_layout
+
+\begin_layout Section
+INTRODUCTION:
+\end_layout
+
+\begin_layout Standard
+The bessel function of the first type is denoted by 
+\begin_inset Formula $J_{v}(x)$
+\end_inset
+
+, and is often seen in cylindrical geometry problems.
+ For large 
+\begin_inset Formula $x$
+\end_inset
+
+, 
+\begin_inset Formula 
+\begin{equation}
+J_{v}(x)\simeq\sqrt{\frac{2}{\pi x}}cos(x-\frac{v\pi}{2}-\frac{\pi}{4})
+\end{equation}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+In this report, we compute the phase, 
+\begin_inset Formula $\phi=\frac{v\pi}{2}+\frac{\pi}{4}$
+\end_inset
+
+, associaed with this approximation of the Bessel function and then estimate
+ 
+\begin_inset Formula $v$
+\end_inset
+
+, which should ideally be equal to 
+\begin_inset Formula $1$
+\end_inset
+
+.
+\begin_inset Newline newline
+\end_inset
+
+We do the above by two different models, described as follows.
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Models:
+\end_layout
+
+\begin_layout Standard
+The models used to estimate Bessel function in this code are:
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+textbf{Model 1:}
+\end_layout
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{equation}
+Acos(x_{i})+Bsin(x_{i})\simeq J_{1}(x_{i})
+\end{equation}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+We estimate phase, 
+\begin_inset Formula $\phi$
+\end_inset
+
+ as:
+\begin_inset Formula 
+\begin{equation}
+\phi=\frac{A}{\sqrt{A^{2}+B^{2}}}
+\end{equation}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Also, 
+\begin_inset Formula 
+\begin{equation}
+\phi=\frac{v\pi}{2}+\frac{\pi}{4}
+\end{equation}
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{equation}
+\therefore v=\frac{2}{\pi}(\phi-\frac{\pi}{4})
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+textbf{Model 2:}
+\end_layout
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{equation}
+A\frac{cos(x_{i})}{\sqrt{x_{i}}}+B\frac{sin(x_{i})}{\sqrt{x_{i}}}\simeq J_{1}(x_{i})
+\end{equation}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+We estimate phase, 
+\begin_inset Formula $\phi$
+\end_inset
+
+ as:
+\begin_inset Formula 
+\begin{equation}
+\phi=\frac{A}{\sqrt{A^{2}+B^{2}}}
+\end{equation}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula $v$
+\end_inset
+
+ is estimated the same way.
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+BRIEF CODE EXPLANATION:
+\end_layout
+
+\begin_layout Subsection
+CODE:
+\end_layout
+
+\begin_layout LyX-Code
+#Importing header files
+\end_layout
+
+\begin_layout LyX-Code
+import numpy as np
+\end_layout
+
+\begin_layout LyX-Code
+from scipy import *
+\end_layout
+
+\begin_layout LyX-Code
+from matplotlib.pyplot import *
+\end_layout
+
+\begin_layout LyX-Code
+from scipy.integrate import quad
+\end_layout
+
+\begin_layout LyX-Code
+from math import *
+\end_layout
+
+\begin_layout LyX-Code
+from scipy.special import jv
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout LyX-Code
+#Extracting subvector starting from x0 from a vector x
+\end_layout
+
+\begin_layout LyX-Code
+#x is an increasing vector
+\end_layout
+
+\begin_layout LyX-Code
+def subvec(x,x0):
+\end_layout
+
+\begin_layout LyX-Code
+	v1 = x[np.where(x>=x0)] #indices of x where value >= x0 are extracted
+\end_layout
+
+\begin_layout LyX-Code
+	v2 = jv(1,v1) #computing bessel fn for extracted vector
+\end_layout
+
+\begin_layout LyX-Code
+	return v1,v2 #returning extracted vector and its bessel fn
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout LyX-Code
+#returns cos fn divide by sqrt(x)
+\end_layout
+
+\begin_layout LyX-Code
+def cos_with_amp(x):
+\end_layout
+
+\begin_layout LyX-Code
+	return np.cos(x)/x**(0.5)	
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout LyX-Code
+#returns sin fn divide by sqrt(x)
+\end_layout
+
+\begin_layout LyX-Code
+def sin_with_amp(x):
+\end_layout
+
+\begin_layout LyX-Code
+	return np.sin(x)/x**(0.5)
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout LyX-Code
+#adds randomised noise to passed vector
+\end_layout
+
+\begin_layout LyX-Code
+def vec_with_noise(x,eps):
+\end_layout
+
+\begin_layout LyX-Code
+	x = x+eps*randn(len(x)) #noise*randomised vector of length of x
+\end_layout
+
+\begin_layout LyX-Code
+	return x
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout LyX-Code
+#Function to compute 'v' as in given expression in question
+\end_layout
+
+\begin_layout LyX-Code
+def calcnu(x,x0,c,eps,model):
+\end_layout
+
+\begin_layout LyX-Code
+	
+\end_layout
+
+\begin_layout LyX-Code
+	v = [] #v array
+\end_layout
+
+\begin_layout LyX-Code
+	err = [] #error array
+\end_layout
+
+\begin_layout LyX-Code
+	print "A and B for model %c with noise = %f:
+\backslash
+n" %(model,eps)
+\end_layout
+
+\begin_layout LyX-Code
+	print "A
+\backslash
+t
+\backslash
+t
+\backslash
+tB
+\backslash
+n" #printing out header for values of A and B as computed in expression
+\end_layout
+
+\begin_layout LyX-Code
+	for i in x0:
+\end_layout
+
+\begin_layout LyX-Code
+		b = subvec(x,i)[1] #extracted subvector from linerly spaced vector
+\end_layout
+
+\begin_layout LyX-Code
+		b = vec_with_noise(b,eps) #adding noise
+\end_layout
+
+\begin_layout LyX-Code
+		A = zeros((len(subvec(x,i)[0]),2)) # allocate a matrix A with zeroes
+\end_layout
+
+\begin_layout LyX-Code
+		if model=='b':
+\end_layout
+
+\begin_layout LyX-Code
+			A[:,0] = np.cos(subvec(x,i)[0]) #first column is cos
+\end_layout
+
+\begin_layout LyX-Code
+			A[:,1] = np.sin(subvec(x,i)[0]) #first column is sin
+\end_layout
+
+\begin_layout LyX-Code
+		elif model=='c':
+\end_layout
+
+\begin_layout LyX-Code
+			A[:,0] = cos_with_amp(subvec(x,i)[0]) #first column is cos with amplitude
+ 1/sqrt(x)
+\end_layout
+
+\begin_layout LyX-Code
+			A[:,1] = sin_with_amp(subvec(x,i)[0]) #first column is sin with amplitude
+ 1/sqrt(x)
+\end_layout
+
+\begin_layout LyX-Code
+		
+\end_layout
+
+\begin_layout LyX-Code
+		a = np.linalg.lstsq(A,b)[0][0] #a is first val of lst sq vector
+\end_layout
+
+\begin_layout LyX-Code
+		b = np.linalg.lstsq(A,b)[0][1] #b is second val of lst sq vector
+\end_layout
+
+\begin_layout LyX-Code
+		print "%7.6f
+\backslash
+t%7.6f
+\backslash
+n" %(a,b) #printing out values of A and B as computed in expression
+\end_layout
+
+\begin_layout LyX-Code
+		phi = math.acos(a/(a**2+b**2)**(0.5)) #calculating phase from a and b: a/sqrt(a^
+2 + b^2)
+\end_layout
+
+\begin_layout LyX-Code
+		vi = (phi-math.pi/4)*(2/math.pi) #phi = v*pi/2 + pi/4
+\end_layout
+
+\begin_layout LyX-Code
+		v.append(vi) #v vector
+\end_layout
+
+\begin_layout LyX-Code
+		err.append(np.fabs(1-vi)) # error
+\end_layout
+
+\begin_layout LyX-Code
+	#plotting v
+\end_layout
+
+\begin_layout LyX-Code
+	plot(x0,v,c)
+\end_layout
+
+\begin_layout LyX-Code
+	return err #returning error
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout LyX-Code
+#Function to plot 'v' i.e Bessel Index for different no.
+ of measurements in same range 0 to 20
+\end_layout
+
+\begin_layout LyX-Code
+def bessel_idx(num):
+\end_layout
+
+\begin_layout LyX-Code
+	x = linspace(0,20,num) #linearly spaced vector
+\end_layout
+
+\begin_layout LyX-Code
+	diff = 20.0/(num-1) #linear difference
+\end_layout
+
+\begin_layout LyX-Code
+	x0 = arange(diff, 18+diff, diff) #points to extract subvector from
+\end_layout
+
+\begin_layout LyX-Code
+	
+\end_layout
+
+\begin_layout LyX-Code
+	title('Estimation of Bessel index $v$')
+\end_layout
+
+\begin_layout LyX-Code
+	xlabel('$x_0$')
+\end_layout
+
+\begin_layout LyX-Code
+	ylabel('$v$')
+\end_layout
+
+\begin_layout LyX-Code
+	#computaion and plots acc to diff models
+\end_layout
+
+\begin_layout LyX-Code
+	err1=calcnu(x,x0,'bo',0,'b')
+\end_layout
+
+\begin_layout LyX-Code
+	err2=calcnu(x,x0,'go',0,'c')
+\end_layout
+
+\begin_layout LyX-Code
+	err3=calcnu(x,x0,'ro',0.01,'c')
+\end_layout
+
+\begin_layout LyX-Code
+	legend(('$
+\backslash
+epsilon=0$, model (b)','$
+\backslash
+epsilon=0$, model (c)','$
+\backslash
+epsilon=1.0e-02$, model (c)'),loc='best')
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout LyX-Code
+	savefig('v_bessel'+str(num)+'.pdf',format='pdf') #save figure as pdf
+\end_layout
+
+\begin_layout LyX-Code
+	show()
+\end_layout
+
+\begin_layout LyX-Code
+	title('Error in Estimation of Bessel index $v$')
+\end_layout
+
+\begin_layout LyX-Code
+	xlabel('$x_0$')
+\end_layout
+
+\begin_layout LyX-Code
+	ylabel('Error')
+\end_layout
+
+\begin_layout LyX-Code
+	#computaion and plots of error acc to diff models
+\end_layout
+
+\begin_layout LyX-Code
+	plot(x0,err1,'bo')
+\end_layout
+
+\begin_layout LyX-Code
+	plot(x0,err2,'go')
+\end_layout
+
+\begin_layout LyX-Code
+	plot(x0,err3,'ro')
+\end_layout
+
+\begin_layout LyX-Code
+	legend(('$
+\backslash
+epsilon=0$, model (b)','$
+\backslash
+epsilon=0$, model (c)','$
+\backslash
+epsilon=1.0e-02$, model (c)'),loc='best')
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout LyX-Code
+	savefig('err_bessel'+str(num)+'.pdf',format='pdf') #save figure as pdf
+\end_layout
+
+\begin_layout LyX-Code
+	show()
+\end_layout
+
+\begin_layout LyX-Code
+	#printing maximum error for all models
+\end_layout
+
+\begin_layout LyX-Code
+	print "Max error for model(b) without noise: %f" %(amax(err1))
+\end_layout
+
+\begin_layout LyX-Code
+	print "Max error for model(c) without noise: %f" %(amax(err2))
+\end_layout
+
+\begin_layout LyX-Code
+	print "Max error for model(c) with noise=0.01: %f" %(amax(err3))
+\end_layout
+
+\begin_layout LyX-Code
+	
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout LyX-Code
+#Main Function
+\end_layout
+
+\begin_layout LyX-Code
+bessel_idx(41) #bessel for 41 points
+\end_layout
+
+\begin_layout LyX-Code
+bessel_idx(61) #bessel for 61 points
+\end_layout
+
+\begin_layout LyX-Code
+bessel_idx(81) #bessel for 81 points
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout Subsection
+FUNCTIONS USED IN CODE:
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Formula $subvec(x,x0):$
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+This function extracts a subvector from the increasing vector 
+\begin_inset Formula $x$
+\end_inset
+
+, with all the elements 
+\begin_inset Formula $\geqslant\, x0$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Formula $cos\_with\_amp(x):$
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+The function returns 
+\begin_inset Formula $\frac{cos(x)}{\sqrt{x}}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Formula $sin\_with\_amp(x):$
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+The function returns 
+\begin_inset Formula $\frac{sin(x)}{\sqrt{x}}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Formula $vec\_with\_noise(x,eps):$
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+This function adds a randomised noise to the vector 
+\begin_inset Formula $x$
+\end_inset
+
+.
+ The vector returned by this function is:
+\begin_inset Formula 
+\[
+x=x+eps*randomised\, vector\, of\, length(x)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Formula $calcnu(x,x0,c,eps,model):$
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+The arguments of this function are:
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula $(i)$
+\end_inset
+
+ 
+\begin_inset Formula $x-$
+\end_inset
+
+The vector over the range of which Bessel function is computed.
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula $(ii)\, x0-$
+\end_inset
+
+The vector which contains the points at which subvector is extracted.
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula $(iii)\, c-$
+\end_inset
+
+The colour specification of the plot of 
+\begin_inset Formula $v\, vs.\, x0$
+\end_inset
+
+.
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula $(iv)$
+\end_inset
+
+
+\begin_inset Formula $eps-$
+\end_inset
+
+The amount of noise to be added to input vector
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula $(v)\, model-$
+\end_inset
+
+The model used to compute 
+\begin_inset Formula $A,\, B\, and\, v$
+\end_inset
+
+.
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+This function:
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula $(i)$
+\end_inset
+
+Extracts subector from 
+\begin_inset Formula $x$
+\end_inset
+
+ for all elements of 
+\begin_inset Formula $x0$
+\end_inset
+
+.
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula $(ii)$
+\end_inset
+
+Creates a matrix A, with first column as 
+\begin_inset Formula $cos(x_{i})$
+\end_inset
+
+ and second column as 
+\begin_inset Formula $sin(x_{i})$
+\end_inset
+
+
+\begin_inset Formula $\forall\, x_{i}$
+\end_inset
+
+in the subvector.
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula $(iii)$
+\end_inset
+
+Computes A and B according to the model passed as function argument.
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula $(iv)$
+\end_inset
+
+Computes phase, 
+\begin_inset Formula $\phi,$
+\end_inset
+
+ according to the given model.
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula $(v)$
+\end_inset
+
+Computes 
+\begin_inset Formula $v,$
+\end_inset
+
+from 
+\begin_inset Formula $\phi$
+\end_inset
+
+ as 
+\begin_inset Formula $v=\frac{2}{\pi}(\phi-\frac{\pi}{4})$
+\end_inset
+
+ as in Eqn.
+\begin_inset Formula $(4)$
+\end_inset
+
+.
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula $(vi)$
+\end_inset
+
+Prints A and B for different 
+\begin_inset Formula $x0.$
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula $(vii)$
+\end_inset
+
+Plots 
+\begin_inset Formula $v\, vs.\, x0,$
+\end_inset
+
+according to given colour specification.
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula $(viii)$
+\end_inset
+
+Computes error for all 
+\begin_inset Formula $x0$
+\end_inset
+
+ and returns error array.
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Formula $bessel\_idx(num)$
+\end_inset
+
+:
+\begin_inset Newline newline
+\end_inset
+
+This function:
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula $(i)$
+\end_inset
+
+Creates 
+\begin_inset Formula $x$
+\end_inset
+
+, a linearly spaced array from 0 to 20 with 
+\begin_inset Formula $num$
+\end_inset
+
+ samples.
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula $(ii)$
+\end_inset
+
+Creates 
+\begin_inset Formula $x0$
+\end_inset
+
+, a linearly spaced vector from 
+\begin_inset Formula $(0,18]$
+\end_inset
+
+ with same linear spacing as 
+\begin_inset Formula $x.$
+\end_inset
+
+This contains the points from which subvector is extracted.
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula $(iii)$
+\end_inset
+
+Plots estimated bessel index, 
+\begin_inset Formula $v$
+\end_inset
+
+ 
+\begin_inset Formula $vs.$
+\end_inset
+
+
+\begin_inset Formula $x0,$
+\end_inset
+
+ and error 
+\begin_inset Formula $i.e.$
+\end_inset
+
+
+\begin_inset Formula $1-v$
+\end_inset
+
+ 
+\begin_inset Formula $vs.$
+\end_inset
+
+
+\begin_inset Formula $x0$
+\end_inset
+
+ for model (b) without noise, model (c) without noise and model (c), with
+ noise = 0.01.
+\end_layout
+
+\begin_layout Subsection
+PLOTS:
+\end_layout
+
+\begin_layout Subsubsection
+Plot of Bessel Index 
+\begin_inset Formula $v\, vs.\, x0$
+\end_inset
+
+ and 
+\begin_inset Formula $error\, vs.\, x0$
+\end_inset
+
+ for 41 samples in [0,20]
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "Bessel Index-41 samples"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename v_bessel41.pdf
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "Error-41 samples"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename err_bessel41.pdf
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Plot of Bessel Index 
+\begin_inset Formula $v\, vs.\, x0$
+\end_inset
+
+ and 
+\begin_inset Formula $error\, vs.\, x0$
+\end_inset
+
+ for 61 samples in [0,20]
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "Bessel Index-61 samples"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename v_bessel61.pdf
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "Error-61 samples"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename err_bessel61.pdf
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Plot of Bessel Index 
+\begin_inset Formula $v\, vs.\, x0$
+\end_inset
+
+ and 
+\begin_inset Formula $error\, vs.\, x0$
+\end_inset
+
+ for 81 samples in [0,20]
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "Bessel Index-81 samples"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename v_bessel81.pdf
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "Error-81 samples"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename err_bessel81.pdf
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+ERROR ANALYSIS:
+\end_layout
+
+\begin_layout Subsubsection
+41 SAMPLES
+\end_layout
+
+\begin_layout Enumerate
+Max error for model(b) without noise: 0.121958 
+\end_layout
+
+\begin_layout Enumerate
+Max error for model(c) without noise: 0.180269 
+\end_layout
+
+\begin_layout Enumerate
+Max error for model(c) with noise=0.01: 0.171130
+\end_layout
+
+\begin_layout Subsubsection
+61 SAMPLES
+\end_layout
+
+\begin_layout Enumerate
+Max error for model(b) without noise: 0.126442
+\end_layout
+
+\begin_layout Enumerate
+Max error for model(c) without noise: 0.210968
+\end_layout
+
+\begin_layout Enumerate
+Max error for model(c) with noise=0.01: 0.209321 
+\end_layout
+
+\begin_layout Subsubsection
+81 SAMPLES
+\end_layout
+
+\begin_layout Enumerate
+Max error for model(b) without noise: 0.128559
+\end_layout
+
+\begin_layout Enumerate
+Max error for model(c) without noise: 0.230132
+\end_layout
+
+\begin_layout Enumerate
+Max error for model(c) with noise=0.01: 0.233080
+\end_layout
+
+\begin_layout Section
+RESULTS AND DISCUSSION:
+\end_layout
+
+\begin_layout Enumerate
+Since the approximation in Eqn.
+ 
+\begin_inset Formula $(1)$
+\end_inset
+
+ is only valid for large 
+\begin_inset Formula $x,$
+\end_inset
+
+ we see that as we move towards a larger value of 
+\begin_inset Formula $x0$
+\end_inset
+
+, the estimation of Bessel index 
+\begin_inset Formula $v,$
+\end_inset
+
+nears the expected value, 
+\begin_inset Formula $i.e.$
+\end_inset
+
+1.
+\end_layout
+
+\begin_layout Enumerate
+But on adding noise, if we estimate the Bessel index only for the larger
+ samples, we get a biased and erroneous result due to fewer number of samples
+ being considered.
+\end_layout
+
+\begin_layout Enumerate
+Model (c) , where 
+\begin_inset Formula $sin(x_{i})$
+\end_inset
+
+ and 
+\begin_inset Formula $cos(x_{i})$
+\end_inset
+
+ are scaled with amplitude 
+\begin_inset Formula $\frac{1}{\sqrt{x_{i}}}$
+\end_inset
+
+ is more accurate than Model (b) as we see from the plots a more consistent
+ and less erroneous output.
+\end_layout
+
+\begin_layout Enumerate
+Increased number of measurements helps us estimate the error better, since
+ with lesser measurements we may miss some points where the value of error
+ is higher.
+\end_layout
+
+\begin_layout Enumerate
+At higher values of 
+\begin_inset Formula $x_{0},$
+\end_inset
+
+we'd get a more accurate value of Bessel Index, 
+\begin_inset Formula $v,$
+\end_inset
+
+if it were possible to take measurements noiselessly.
+ After adding noise, the Bessel index estimation at higher values of 
+\begin_inset Formula $x_{0}$
+\end_inset
+
+is affected more due to lower number of samples, thereby giving biased output.
+ Hence, we should attempt reach a balanced value of 
+\begin_inset Formula $x_{0}$
+\end_inset
+
+, which is large enough such that the Bessel index approximation from Eqn.
+ 
+\begin_inset Formula $(1)$
+\end_inset
+
+ is valid and also we have enough samples such that the effect of noise
+ is negated.
+\end_layout
+
+\end_body
+\end_document

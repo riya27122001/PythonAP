@@ -1,0 +1,1136 @@
+#LyX 2.0 created this file. For more info see http://www.lyx.org/
+\lyxformat 413
+\begin_document
+\begin_header
+\textclass article
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\float_placement H
+\paperfontsize 12
+\spacing single
+\use_hyperref false
+\papersize a4paper
+\use_geometry true
+\use_amsmath 1
+\use_esint 1
+\use_mhchem 1
+\use_mathdots 1
+\cite_engine basic
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 1.25cm
+\topmargin 1.25cm
+\rightmargin 1.25cm
+\bottommargin 1.25cm
+\headheight 1.25cm
+\headsep 1.25cm
+\footskip 1.25cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+APPLIED PROGRAMMING LAB
+\begin_inset Newline newline
+\end_inset
+
+(Week - 6)
+\begin_inset Newline newline
+\end_inset
+
+Modeling Magnetic Field due to a current carrying wire
+\end_layout
+
+\begin_layout Author
+Shubhangi Ghosh
+\begin_inset Newline newline
+\end_inset
+
+EE15B129
+\begin_inset Newline newline
+\end_inset
+
+Department of Electrical Engineering
+\end_layout
+
+\begin_layout Section
+INTRODUCTION:
+\end_layout
+
+\begin_layout Standard
+This report presents the computation of magnetic field, 
+\begin_inset Formula $\vec{B}$
+\end_inset
+
+, using Biot-Savart's Law 
+\begin_inset Formula 
+\begin{equation}
+d\overrightarrow{B}=\frac{\mu_{0}}{4\pi}\frac{I\overrightarrow{dl}x\overrightarrow{R}}{R^{3}}
+\end{equation}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+due to current carrying wire(direction of current is known) with given dimension
+s.
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+BRIEF CODE EXPLANATION:
+\end_layout
+
+\begin_layout Subsection
+CODE:
+\end_layout
+
+\begin_layout LyX-Code
+#Importing header files
+\end_layout
+
+\begin_layout LyX-Code
+import numpy as np
+\end_layout
+
+\begin_layout LyX-Code
+from scipy import *
+\end_layout
+
+\begin_layout LyX-Code
+from matplotlib.pyplot import *
+\end_layout
+
+\begin_layout LyX-Code
+from scipy.integrate import quad
+\end_layout
+
+\begin_layout LyX-Code
+from math import *
+\end_layout
+
+\begin_layout LyX-Code
+from pylab import *
+\end_layout
+
+\begin_layout LyX-Code
+import mpl_toolkits.mplot3d.axes3d as p3
+\end_layout
+
+\begin_layout LyX-Code
+import sys
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout LyX-Code
+#returns index where value of y-index is i/10
+\end_layout
+
+\begin_layout LyX-Code
+def ret_idx(i):
+\end_layout
+
+\begin_layout LyX-Code
+	return np.where((10*np.array(Y[:,0,0])).astype(int)==i)[0][0]
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout LyX-Code
+# declaring array of points
+\end_layout
+
+\begin_layout LyX-Code
+#top part of bent wire
+\end_layout
+
+\begin_layout LyX-Code
+points_top_bent = zeros((8,2)) # allocate a matrix with zeroes
+\end_layout
+
+\begin_layout LyX-Code
+points_top_bent[:,0] = np.arange(1.0,0.5,-0.1/np.sqrt(2)) #assign values
+\end_layout
+
+\begin_layout LyX-Code
+points_top_bent[:,1] = np.arange(-0.9,-0.4,0.1/np.sqrt(2))
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout LyX-Code
+#right part of wire
+\end_layout
+
+\begin_layout LyX-Code
+points_rgt = zeros((10,2)) # allocate a matrix with zeroes
+\end_layout
+
+\begin_layout LyX-Code
+points_rgt[:,0] = 0.5 #assign values
+\end_layout
+
+\begin_layout LyX-Code
+points_rgt[:,1] = np.arange(-0.4,0.6,0.1)
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout LyX-Code
+#top part of wire
+\end_layout
+
+\begin_layout LyX-Code
+points_top = zeros((10,2)) # allocate a matrix with zeroes
+\end_layout
+
+\begin_layout LyX-Code
+points_top[:,0] = np.arange(0.4,-0.6,-0.1)#assign values
+\end_layout
+
+\begin_layout LyX-Code
+points_top[:,1] = 0.5
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout LyX-Code
+#left part of wire
+\end_layout
+
+\begin_layout LyX-Code
+points_lft = zeros((10,2)) # allocate a matrix with zeroes
+\end_layout
+
+\begin_layout LyX-Code
+points_lft[:,0] = -0.5#assign values
+\end_layout
+
+\begin_layout LyX-Code
+points_lft[:,1] = np.arange(0.4,-0.6,-0.1)
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout LyX-Code
+#bottom part of wire
+\end_layout
+
+\begin_layout LyX-Code
+points_btm = zeros((9,2)) # allocate a matrix with zeroes
+\end_layout
+
+\begin_layout LyX-Code
+points_btm[:,0] = np.arange(-0.4,0.5,0.1)#assign values
+\end_layout
+
+\begin_layout LyX-Code
+points_btm[:,1] = -0.5
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout LyX-Code
+#bottom part of bent wire
+\end_layout
+
+\begin_layout LyX-Code
+points_btm_bent = zeros((8,2)) # allocate a matrix with zeroes
+\end_layout
+
+\begin_layout LyX-Code
+points_btm_bentx = np.arange(0.9,0.4,-0.1/np.sqrt(2))#assign values
+\end_layout
+
+\begin_layout LyX-Code
+points_btm_benty = np.arange(-1.0,-0.5,0.1/np.sqrt(2))
+\end_layout
+
+\begin_layout LyX-Code
+points_btm_bent[:,0] = points_btm_bentx[::-1] #reversing array since I've
+ started counting points
+\end_layout
+
+\begin_layout LyX-Code
+# from bottom for simplicity whereas it is supposed to be counted the other
+ way round
+\end_layout
+
+\begin_layout LyX-Code
+points_btm_bent[:,1] = points_btm_benty[::-1]
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout LyX-Code
+#concatenate all points
+\end_layout
+
+\begin_layout LyX-Code
+points = np.concatenate((points_top_bent,points_rgt,points_top,points_lft,points_
+btm,points_btm_bent),axis=0)
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout LyX-Code
+#find centers
+\end_layout
+
+\begin_layout LyX-Code
+centers = (points[:-1]+points[1:])/2
+\end_layout
+
+\begin_layout LyX-Code
+#concatenate with zero column z-axis
+\end_layout
+
+\begin_layout LyX-Code
+centers = np.concatenate((centers,np.array([zeros(len(centers))]).transpose()),axis
+=1)
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout LyX-Code
+#find current direction by subtarcting
+\end_layout
+
+\begin_layout LyX-Code
+curr_dir=(points[1:]-points[:-1])*10
+\end_layout
+
+\begin_layout LyX-Code
+#concatenate with zero column z-axis
+\end_layout
+
+\begin_layout LyX-Code
+curr_dir = np.concatenate((curr_dir,np.array([zeros(len(curr_dir))]).transpose()),a
+xis=1)
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout LyX-Code
+#plot points, centers and current direction
+\end_layout
+
+\begin_layout LyX-Code
+fig = figure()
+\end_layout
+
+\begin_layout LyX-Code
+title('Current direction in wire')
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout LyX-Code
+xlim(-1.0,1.1)
+\end_layout
+
+\begin_layout LyX-Code
+ylim(-1.0,1.1)
+\end_layout
+
+\begin_layout LyX-Code
+xticks(np.arange(-1.0,1.1,0.2))
+\end_layout
+
+\begin_layout LyX-Code
+yticks(np.arange(-1.0,1.1,0.2))
+\end_layout
+
+\begin_layout LyX-Code
+grid()
+\end_layout
+
+\begin_layout LyX-Code
+plot(points[:,0],points[:,1],'kx')
+\end_layout
+
+\begin_layout LyX-Code
+plot(centers[:,0],centers[:,1],'ro')
+\end_layout
+
+\begin_layout LyX-Code
+quiver(points[:-1,0],points[:-1,1],curr_dir[:,0],curr_dir[:,1],color='b')
+\end_layout
+
+\begin_layout LyX-Code
+ #quiver plot for current direction
+\end_layout
+
+\begin_layout LyX-Code
+legend(('Points on wire','Centers'))
+\end_layout
+
+\begin_layout LyX-Code
+savefig('current.pdf',format='pdf')
+\end_layout
+
+\begin_layout LyX-Code
+show()
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout LyX-Code
+x=np.arange(-1.0,1.1,0.1) # create x and y and z axes
+\end_layout
+
+\begin_layout LyX-Code
+y=np.arange(-1.0,1.1,0.1)
+\end_layout
+
+\begin_layout LyX-Code
+z=np.arange(-1.0,1.1,0.1)
+\end_layout
+
+\begin_layout LyX-Code
+X,Y,Z=meshgrid(x,y,z) # creates arrays out of x, y and z
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout LyX-Code
+# Field at point due to itself is assumed to be zero
+\end_layout
+
+\begin_layout LyX-Code
+#creating array of the size of meshgrid to store B in directions x,y and
+ z
+\end_layout
+
+\begin_layout LyX-Code
+Bx=np.array(zeros((len(x),len(y),len(z))),dtype=float)
+\end_layout
+
+\begin_layout LyX-Code
+By=np.array(zeros((len(x),len(y),len(z))),dtype=float)
+\end_layout
+
+\begin_layout LyX-Code
+Bz=np.array(zeros((len(x),len(y),len(z))),dtype=float)
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout LyX-Code
+#evaluating field due to all the centers of wires one by one
+\end_layout
+
+\begin_layout LyX-Code
+for i,j in zip(centers,curr_dir):
+\end_layout
+
+\begin_layout LyX-Code
+	
+\end_layout
+
+\begin_layout LyX-Code
+	#position vector R
+\end_layout
+
+\begin_layout LyX-Code
+	Rx = X-i[0]
+\end_layout
+
+\begin_layout LyX-Code
+	Ry = Y-i[1]
+\end_layout
+
+\begin_layout LyX-Code
+	Rz = Z-i[2]
+\end_layout
+
+\begin_layout LyX-Code
+	
+\end_layout
+
+\begin_layout LyX-Code
+	#magnitude of R
+\end_layout
+
+\begin_layout LyX-Code
+	R = (Rx**2+Ry**2+Rz**2)**(0.5)
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout LyX-Code
+	#masking values where R is nearly 0
+\end_layout
+
+\begin_layout LyX-Code
+	R=np.ma.masked_where(R<0.00001, R)
+\end_layout
+
+\begin_layout LyX-Code
+	Rx=np.ma.masked_where(R<0.00001, Rx)
+\end_layout
+
+\begin_layout LyX-Code
+	Ry=np.ma.masked_where(R<0.00001, Ry)
+\end_layout
+
+\begin_layout LyX-Code
+	Rz=np.ma.masked_where(R<0.00001, Rz)
+\end_layout
+
+\begin_layout LyX-Code
+	
+\end_layout
+
+\begin_layout LyX-Code
+	#dB due to current element
+\end_layout
+
+\begin_layout LyX-Code
+	dBx=(10.0**(-5)*j[1]*Rz)/(R**3)
+\end_layout
+
+\begin_layout LyX-Code
+	dBy=(10.0**(-5)*-j[0]*Rz)/(R**3)
+\end_layout
+
+\begin_layout LyX-Code
+	dBz=(10.0**(-5)*(j[0]*Ry-j[1]*Rx))/(R**3)
+\end_layout
+
+\begin_layout LyX-Code
+	#adding all dB to get total field
+\end_layout
+
+\begin_layout LyX-Code
+	Bx=Bx+dBx
+\end_layout
+
+\begin_layout LyX-Code
+	By=By+dBy
+\end_layout
+
+\begin_layout LyX-Code
+	Bz=Bz+dBz
+\end_layout
+
+\begin_layout LyX-Code
+#plotting B at y=0.0
+\end_layout
+
+\begin_layout LyX-Code
+title(r"Arrow plot of $
+\backslash
+vec{B}$ along the $x-z$ plane")
+\end_layout
+
+\begin_layout LyX-Code
+xlabel('$x$')
+\end_layout
+
+\begin_layout LyX-Code
+ylabel('$z$')
+\end_layout
+
+\begin_layout LyX-Code
+quiver(X,Z,Bx[ret_idx(0)],Bz[ret_idx(0)],scale=0.01)
+\end_layout
+
+\begin_layout LyX-Code
+savefig('B(y=0.0).pdf',format='pdf')
+\end_layout
+
+\begin_layout LyX-Code
+show()
+\end_layout
+
+\begin_layout LyX-Code
+#plotting B at y=-0.3
+\end_layout
+
+\begin_layout LyX-Code
+title(r"Arrow plot of $
+\backslash
+vec{B}$ along the plane $y=-0.3cm$")
+\end_layout
+
+\begin_layout LyX-Code
+xlabel(r'$x$')
+\end_layout
+
+\begin_layout LyX-Code
+ylabel(r'$z$')
+\end_layout
+
+\begin_layout LyX-Code
+quiver(X,Z,Bx[ret_idx(-3)],Bz[ret_idx(-3)],scale=0.01)
+\end_layout
+
+\begin_layout LyX-Code
+savefig('B(y=-0.3).pdf',format='pdf')
+\end_layout
+
+\begin_layout LyX-Code
+show()
+\end_layout
+
+\begin_layout LyX-Code
+#plotting B at y=-0.5
+\end_layout
+
+\begin_layout LyX-Code
+title(r"Arrow plot of $
+\backslash
+vec{B}$ along the plane $y=-0.5cm$")
+\end_layout
+
+\begin_layout LyX-Code
+xlabel(r'$x$')
+\end_layout
+
+\begin_layout LyX-Code
+ylabel(r'$z$')
+\end_layout
+
+\begin_layout LyX-Code
+quiver(X,Z,Bx[ret_idx(-5)],Bz[ret_idx(-5)],scale=0.01)
+\end_layout
+
+\begin_layout LyX-Code
+savefig('B(y=-0.5).pdf',format='pdf')
+\end_layout
+
+\begin_layout LyX-Code
+show()
+\end_layout
+
+\begin_layout LyX-Code
+#plotting B at y=-0.7
+\end_layout
+
+\begin_layout LyX-Code
+title(r"Arrow plot of $
+\backslash
+vec{B}$ along the plane $y=-0.7cm$")
+\end_layout
+
+\begin_layout LyX-Code
+xlabel(r'$x$')
+\end_layout
+
+\begin_layout LyX-Code
+ylabel(r'$z$')
+\end_layout
+
+\begin_layout LyX-Code
+quiver(X,Z,Bx[ret_idx(-7)],Bz[ret_idx(-7)],scale=0.01)
+\end_layout
+
+\begin_layout LyX-Code
+savefig('B(y=-0.7).pdf',format='pdf')
+\end_layout
+
+\begin_layout LyX-Code
+show()
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout Subsection
+FUNCTIONS USED IN CODE:
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Formula $ret\_idx(i):$
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+This function returns the meshgrid points of Y(
+\begin_inset Formula $i.e.$
+\end_inset
+
+ y-axis points) where 
+\begin_inset Formula $y=0.1*i$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection
+BRIEF CODE EXPLANATION:
+\end_layout
+
+\begin_layout Standard
+The following steps have been followed in the code:
+\end_layout
+
+\begin_layout Enumerate
+First, we define points on the wire spaced at a length of 
+\begin_inset Formula $0.1cm$
+\end_inset
+
+ in an array.
+\end_layout
+
+\begin_layout Enumerate
+At the bent portion of the wire, we assume the wire length to be a little
+ shorter than 
+\begin_inset Formula $0.1cm$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Enumerate
+Next, we define an array consisting of centers of the wire segments, by
+ taking average of the coordinates of the points.
+\end_layout
+
+\begin_layout Enumerate
+We concatenate the centers with the z-axis column, 
+\begin_inset Formula $i.e.\, z=0$
+\end_inset
+
+ column.
+\end_layout
+
+\begin_layout Enumerate
+We define an array consisting of current directions in the wire segments,
+ by taking difference of the coordinates of the points, and multiplying
+ by 10 to make the magnitude of the vector =1.
+\end_layout
+
+\begin_layout Enumerate
+We concatenate the current direction vector with the z-axis column, 
+\begin_inset Formula $i.e.\, z=0$
+\end_inset
+
+ column.
+\end_layout
+
+\begin_layout Enumerate
+We construct the quiver plot of the points, centers and current directions
+ in the wire.
+\end_layout
+
+\begin_layout Enumerate
+Then,
+\begin_inset Formula $\,$
+\end_inset
+
+we
+\begin_inset Formula $\,$
+\end_inset
+
+create
+\begin_inset Formula $\,$
+\end_inset
+
+a
+\begin_inset Formula $\,$
+\end_inset
+
+meshgrid
+\begin_inset space ~
+\end_inset
+
+of
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset Formula $x-,y-and\, z-$
+\end_inset
+
+axes,
+\begin_inset space ~
+\end_inset
+
+with 
+\begin_inset Formula $x=-0.1cm\, to\,0.1cm,\, y=-0.1cm\, to\,0.1cm\, and\, z=-0.1cm\, to\,0.1cm$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Enumerate
+We evaluate flux density or magnetic field intensity, 
+\begin_inset Formula $\mathbf{\overrightarrow{B}}$
+\end_inset
+
+ at all the points in the meshgrid, using Biot-Savart's Law, as in Eqn.
+ 
+\begin_inset Formula $(1)$
+\end_inset
+
+, by iterating through all the wire segments.
+\end_layout
+
+\begin_layout Enumerate
+The points which lie on the centers of the wire segments 
+\begin_inset Formula $i.e.\,\overrightarrow{r}=0$
+\end_inset
+
+, are masked in the meshgrid to prevent division-by-zero error.
+\end_layout
+
+\begin_layout Enumerate
+We then construct quiver plots of 
+\begin_inset Formula $\mathbf{\overrightarrow{B}}$
+\end_inset
+
+ on the 
+\begin_inset Formula $x-z\, plane,\, y=-0.3cm,\, y=-0.5cm\, and\, y=-0.7cm.$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+PLOTS:
+\end_layout
+
+\begin_layout Subsubsection
+Quiver Plot of Current in the wire
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "Error-41 samples"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename current.pdf
+	scale 75
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Quiver Plot of 
+\begin_inset Formula $\overrightarrow{B}$
+\end_inset
+
+ on 
+\begin_inset Formula $x-z$
+\end_inset
+
+ plane
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "B(y=0.0)"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename B(y=0.0).pdf
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Quiver Plot of 
+\begin_inset Formula $\overrightarrow{B}$
+\end_inset
+
+ on 
+\begin_inset Formula $y=-0.3cm$
+\end_inset
+
+ plane
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "B(y=-0.3)"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename B(y=-0.3).pdf
+	scale 75
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Quiver Plot of 
+\begin_inset Formula $\overrightarrow{B}$
+\end_inset
+
+ on 
+\begin_inset Formula $y=-0.5cm$
+\end_inset
+
+ plane
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "B(y=-0.5)"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename B(y=-0.5).pdf
+	scale 75
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Quiver Plot of 
+\begin_inset Formula $\overrightarrow{B}$
+\end_inset
+
+ on 
+\begin_inset Formula $y=-0.7cm$
+\end_inset
+
+ plane
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "B(y=-0.7)"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename B(y=-0.7).pdf
+	scale 75
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+RESULTS AND DISCUSSION:
+\end_layout
+
+\begin_layout Standard
+When we construct the quiver plot of 
+\begin_inset Formula $\overrightarrow{B}$
+\end_inset
+
+, we clearly observe that Ampere's circuital law is obeyed 
+\begin_inset Formula $i.e.$
+\end_inset
+
+ the field forms loops around the point where the wire cuts the plane(observe
+ all the plots of field, 
+\begin_inset Formula $\overrightarrow{B}$
+\end_inset
+
+ and compare with the first plot which indicates the position of the wire.
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document

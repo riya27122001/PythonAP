@@ -1,0 +1,1965 @@
+#LyX 2.0 created this file. For more info see http://www.lyx.org/
+\lyxformat 413
+\begin_document
+\begin_header
+\textclass article
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\float_placement H
+\paperfontsize 12
+\spacing single
+\use_hyperref false
+\papersize a4paper
+\use_geometry true
+\use_amsmath 1
+\use_esint 1
+\use_mhchem 1
+\use_mathdots 1
+\cite_engine basic
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 1.25cm
+\topmargin 1.25cm
+\rightmargin 1.25cm
+\bottommargin 1.25cm
+\headheight 1.25cm
+\headsep 1.25cm
+\footskip 1.25cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+APPLIED PROGRAMMING LAB
+\begin_inset Newline newline
+\end_inset
+
+(Week - 3)
+\begin_inset Newline newline
+\end_inset
+
+Estimation of Potential and Current for a given Electrode Configuration
+\end_layout
+
+\begin_layout Author
+Shubhangi Ghosh
+\begin_inset Newline newline
+\end_inset
+
+EE15B129
+\begin_inset Newline newline
+\end_inset
+
+Department of Electrical Engineering
+\end_layout
+
+\begin_layout Section
+INTRODUCTION:
+\end_layout
+
+\begin_layout Standard
+This report presents:
+\end_layout
+
+\begin_layout Enumerate
+Computation of potential by solving Poisson's equation in two dimensions.
+\begin_inset Formula 
+\begin{equation}
+\frac{\partial^{2}\phi}{\partial x^{2}}+\frac{\partial^{2}\phi}{\partial y^{2}}=0
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+Computation of current by effectively differentiating potential.
+\end_layout
+
+\begin_layout Enumerate
+Estimating total error by computing error between successive iterations.
+\end_layout
+
+\begin_layout Subsection
+Potential Computation:
+\end_layout
+
+\begin_layout Standard
+The function '
+\series bold
+potential_func(elec_size, Nx, Ny):
+\series default
+' is used for this purpose.
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Potential for Non-Boundary points of Conductor
+\end_layout
+
+\begin_layout Standard
+Poisson's equation in two dimensions is written as in Eqn.
+ 
+\begin_inset Formula $(1).$
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Assuming 
+\begin_inset Formula $\phi$
+\end_inset
+
+ is known at position 
+\begin_inset Formula $(x_{i},y_{j})$
+\end_inset
+
+ in the conductor, the Possion's equation can be differentiated as:
+\begin_inset Formula 
+\[
+\frac{\partial\phi}{\partial x}_{(x_{i},y_{j})}=\frac{\phi(x_{i+1/2},y_{j})-\phi(x_{i-1/2},y_{j})}{\triangle x}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{equation}
+\frac{\partial^{2}\phi}{\partial x^{2}}_{(x_{i},y_{j})}=\frac{\phi(x_{i+1},y_{j})-2\phi(x_{i},y_{j})+\phi(x_{i-1},y_{j})}{(\triangle x)^{2}}
+\end{equation}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Similarly double differentiating 
+\begin_inset Formula $w.r.t.$
+\end_inset
+
+ 
+\begin_inset Formula $y$
+\end_inset
+
+, we get,
+\begin_inset Formula 
+\begin{equation}
+\frac{\partial^{2}\phi}{\partial y^{2}}_{(x_{i},y_{j})}=\frac{\phi(x_{i},y_{j+1})-2\phi(x_{i},y_{j})+\phi(x_{i},y_{j-1})}{(\triangle x)^{2}}
+\end{equation}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Substituting 
+\begin_inset Formula $(2)$
+\end_inset
+
+ and 
+\begin_inset Formula $(3)$
+\end_inset
+
+ in 
+\begin_inset Formula $(1),$
+\end_inset
+
+we get:
+\begin_inset Formula 
+\begin{equation}
+\phi_{i,j}=\frac{\phi_{i-1,j}+\phi_{i+1,j}+\phi_{i,j-1}+\phi_{i,j+1}}{4}
+\end{equation}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+So, we see that potential at a point is the average of its surrounding points,
+ unless the point is at the boundary.
+\begin_inset Newline newline
+\end_inset
+
+In code, this is implemented as:
+\end_layout
+
+\begin_layout LyX-Code
+phi[1:-1,1:-1]=0.25*(phi[1:-1,0:-2]+ phi[1:-1,2:]+ phi[0:-2,1:-1]+ phi[2:,1:-1])
+\end_layout
+
+\begin_layout Subsubsection
+Potential at Boundary Points:
+\end_layout
+
+\begin_layout Standard
+We draw boundary conditions based on the fact that electic field inside
+ a conductor is 
+\begin_inset Formula $0$
+\end_inset
+
+.
+\begin_inset Newline newline
+\end_inset
+
+Thus, the potential at boundary points except for those which represent
+ the electrode is given by the potential of the non-boundary point one point
+ off from it.
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+The code for this is:
+\end_layout
+
+\begin_layout LyX-Code
+        phi[1:-1,0]=phi[1:-1,1]
+\end_layout
+
+\begin_layout LyX-Code
+		phi[1:-1,-1]=phi[1:-1,-2]
+\end_layout
+
+\begin_layout LyX-Code
+		phi[0,:Nbegin]=phi[1,:Nbegin]
+\end_layout
+
+\begin_layout LyX-Code
+		phi[0,(Nend+1):]=phi[1,(Nend+1):]
+\end_layout
+
+\begin_layout LyX-Code
+		phi[-1,:Nbegin]=phi[-2,:Nbegin]
+\end_layout
+
+\begin_layout LyX-Code
+		phi[-1,(Nend+1):]=phi[-2,(Nend+1):]
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Subsection
+Current Computation:
+\end_layout
+
+\begin_layout LyX-Code
+The current density in the conductor along 
+\begin_inset Formula $x-$
+\end_inset
+
+ or 
+\begin_inset Formula $y-$
+\end_inset
+
+axis is computed by differentiating the potential in that direction.
+\begin_inset Formula 
+\begin{equation}
+J_{x}=-\frac{\partial\phi}{\partial x}
+\end{equation}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+When represented in discrete domain,
+\begin_inset Formula 
+\begin{equation}
+J_{x,ij}=\frac{1}{2}(\phi_{i,j-1}-\phi_{i,j+1})
+\end{equation}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Analogous to 
+\begin_inset Formula $(5)$
+\end_inset
+
+and 
+\begin_inset Formula $(6)$
+\end_inset
+
+, along y-axis,
+\begin_inset Formula 
+\begin{equation}
+J_{y}=-\frac{\partial\phi}{\partial y}
+\end{equation}
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{equation}
+J_{y,ij}=\frac{1}{2}(\phi_{i-1,j}-\phi_{i+1,j})
+\end{equation}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+In the function, '
+\series bold
+error_est(errors,Nx,Ny):
+\series default
+', the above is implemented in code as:
+\begin_inset Newline newline
+\end_inset
+
+    Jy[1:-1,1:-1]=0.5*(phi[0:-2,1:-1] - phi[2:,1:-1])
+\end_layout
+
+\begin_layout LyX-Code
+	Jx[1:-1,1:-1]=0.5*(phi[1:-1,0:-2] - phi[1:-1,2:])
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Error Estimation:
+\end_layout
+
+\begin_layout Subsubsection*
+Curve Fitting of Error between successive iterations:
+\end_layout
+
+\begin_layout Standard
+We model the error between two successive iterations of potential computation
+ as:
+\begin_inset Formula 
+\begin{equation}
+y=Ae^{Bx}
+\end{equation}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Taking 
+\begin_inset Formula $log$
+\end_inset
+
+ on both sides of 
+\begin_inset Formula $(9),$
+\end_inset
+
+we get
+\begin_inset Formula 
+\begin{equation}
+log(y)=logA+Bx
+\end{equation}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+We obtain A and B by least square estimation:
+\begin_inset Formula 
+\begin{equation}
+\left(\begin{array}{cc}
+1 & x_{1}\\
+1 & x_{2}\\
+... & ...\\
+1 & x_{N-1}\\
+1 & x_{N}
+\end{array}\right)\left(\begin{array}{c}
+logA\\
+B
+\end{array}\right)=\left(\begin{array}{c}
+log(y_{1})\\
+log(y_{2})\\
+...\\
+log(y_{N})
+\end{array}\right)
+\end{equation}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+where,
+\begin_inset Formula 
+\[
+x_{i}-Iteration\, number
+\]
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula 
+\[
+y_{i}-error\, between\, i^{th}\, and\,(i-1)^{st}\, iteration
+\]
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+In code, this is implemented in the function '
+\series bold
+error_est(errors,Nx,Ny):
+\series default
+' as:
+\end_layout
+
+\begin_layout LyX-Code
+    #calculating B for exponential fit
+\end_layout
+
+\begin_layout LyX-Code
+	a = ones((len(errors),2)) # allocate a matrix A with ones
+\end_layout
+
+\begin_layout LyX-Code
+	#first column is ones
+\end_layout
+
+\begin_layout LyX-Code
+	a[:,1] = iters #second column is iteration number
+\end_layout
+
+\begin_layout LyX-Code
+	b = np.log(errors)#result side is log of errors
+\end_layout
+
+\begin_layout LyX-Code
+	lst_sq = np.linalg.lstsq(a,b)[0] #least square approximation
+\end_layout
+
+\begin_layout LyX-Code
+	#A and B are found
+\end_layout
+
+\begin_layout LyX-Code
+	A = np.exp(lst_sq[0])
+\end_layout
+
+\begin_layout LyX-Code
+	B = lst_sq[1]
+\end_layout
+
+\begin_layout LyX-Code
+	#curve fit for errors = y found using A and B
+\end_layout
+
+\begin_layout LyX-Code
+	y = A*np.exp(B*array(iters))
+\end_layout
+
+\begin_layout Standard
+For a better curve-fit, instead of imposing the exponential fit from the
+ first iteration, we impose the fit from the 
+\begin_inset Formula $500^{th}$
+\end_inset
+
+observation because by then the error has considerably reduced and further
+ reduction in error fits the exponential form better.
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+In the code for the given experiment, we estimate error in three different
+ situations: 
+\end_layout
+
+\begin_layout Subsubsection
+Error from value at completed iterations to infinite iterations:
+\end_layout
+
+\begin_layout Standard
+In this method, we sum up the errors between successive iterations from
+ the currently computed iteration till infinite iterations.
+\begin_inset Formula 
+\[
+error=\sum_{k=N+1}^{\infty}Ae^{Bk}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\approx\intop_{N+0.5}^{\infty}Ae^{Bk}dk
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{equation}
+error=-\frac{A}{B}e^{(B(N+0.5))}
+\end{equation}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+In code, this is implemented as:
+\end_layout
+
+\begin_layout LyX-Code
+#expression for estimated error between potentials
+\end_layout
+
+\begin_layout LyX-Code
+print "Final estimated error in potential: %f" %((-A/B)*np.exp(B*(2000.0+0.5)))
+\end_layout
+
+\begin_layout Subsubsection
+Error of estimated potential from actual potential
+\end_layout
+
+\begin_layout Standard
+This method of potential estimation is used when the electrode covers the
+ entire edge, and thereby it is simplistic to compute potential through
+ Poisson's equation mathematically.
+\begin_inset Formula 
+\[
+\phi=V_{0}\frac{L-y}{L}
+\]
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Computing Mean-Square Error,
+\begin_inset Formula 
+\begin{equation}
+\epsilon_{2}=\frac{1}{N_{x}N_{y}}\sum_{ij}(\phi_{ij}-V_{0}\frac{L-y}{L})^{2}
+\end{equation}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+In code, this is done as:
+\end_layout
+
+\begin_layout LyX-Code
+#Mean square error in potential
+\end_layout
+
+\begin_layout LyX-Code
+def meansq_err(phi,Nx,Ny):	
+\end_layout
+
+\begin_layout LyX-Code
+	idx = zeros((Ny,Nx)) #initialising index matrix
+\end_layout
+
+\begin_layout LyX-Code
+	#creating a matrix which contains the y-index for phi marix
+\end_layout
+
+\begin_layout LyX-Code
+	idx[0:,]=np.array(range(Ny)) 
+\end_layout
+
+\begin_layout LyX-Code
+	idx = idx.transpose()
+\end_layout
+
+\begin_layout LyX-Code
+	idx=array(idx)
+\end_layout
+
+\begin_layout LyX-Code
+	phi=array(phi)
+\end_layout
+
+\begin_layout LyX-Code
+	#average least square error by finding sum of squares of errors 
+\end_layout
+
+\begin_layout LyX-Code
+	#and dividing by no.
+ of points at which potential is estimated(Nx*Ny)
+\end_layout
+
+\begin_layout LyX-Code
+	meansq_err = (1.0/(Nx*Ny))*sum((phi-1.0*((Ny-idx)/Ny))**2)
+\end_layout
+
+\begin_layout LyX-Code
+	return meansq_err
+\end_layout
+
+\begin_layout Subsubsection
+Error between entering and exiting currents
+\end_layout
+
+\begin_layout Standard
+There is a non-zero difference between the current entering and exiting
+ the conductor, because the estimation doesn't represent the exact potential
+ in a conductor.
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+In code, this is implemented as:
+\end_layout
+
+\begin_layout LyX-Code
+    #finding total current
+\end_layout
+
+\begin_layout LyX-Code
+	curr_enter = sum(Jy[1,1:-1]) #adding current density in y-direction at
+ entry
+\end_layout
+
+\begin_layout LyX-Code
+	curr_exit = sum(Jy[-2,1:-1]) #adding current density in y-direction at
+ exit
+\end_layout
+
+\begin_layout LyX-Code
+	curr_avj = (curr_exit+curr_enter)/2.0 #average current 
+\end_layout
+
+\begin_layout LyX-Code
+	curr_diff = fabs(curr_enter-curr_exit) #diffenence or error in current
+\end_layout
+
+\begin_layout LyX-Code
+	print "Niter: %d Iavj=%f Idiff=%f" %(Niter, curr_avj, curr_diff)
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+However, this error is much larger than the error as estimated in subsection
+ 
+\series bold
+1.3.1
+\series default
+ probably because the error at multiple points(the whole edge) gets added
+ up.
+\end_layout
+
+\begin_layout Subsection
+Finding Resistance:
+\end_layout
+
+\begin_layout Standard
+Resistance is calculated by dividing the elecrode voltage, 
+\begin_inset Formula $V_{0}$
+\end_inset
+
+ by average current, 
+\begin_inset Formula $curr\_avj$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout LyX-Code
+    #finding resistance
+\end_layout
+
+\begin_layout LyX-Code
+	print "The resistance is thus approximated to be: %f ohms." %(V0/curr_avj)
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+CODE:
+\end_layout
+
+\begin_layout LyX-Code
+#Importing header files
+\end_layout
+
+\begin_layout LyX-Code
+import numpy as np
+\end_layout
+
+\begin_layout LyX-Code
+from scipy import *
+\end_layout
+
+\begin_layout LyX-Code
+from matplotlib.pyplot import *
+\end_layout
+
+\begin_layout LyX-Code
+from scipy.integrate import quad
+\end_layout
+
+\begin_layout LyX-Code
+from math import *
+\end_layout
+
+\begin_layout LyX-Code
+from pylab import *
+\end_layout
+
+\begin_layout LyX-Code
+import mpl_toolkits.mplot3d.axes3d as p3
+\end_layout
+
+\begin_layout LyX-Code
+import sys
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout LyX-Code
+if (len(sys.argv)>1):
+\end_layout
+
+\begin_layout LyX-Code
+	elec_size=sys.argv[1] #electrode size
+\end_layout
+
+\begin_layout LyX-Code
+	Nx=sys.argv[2] #size along x
+\end_layout
+
+\begin_layout LyX-Code
+	Ny=sys.argv[3] #size along y
+\end_layout
+
+\begin_layout LyX-Code
+	Niter=sys.argv[4] #number of iterations to perform
+\end_layout
+
+\begin_layout LyX-Code
+else:
+\end_layout
+
+\begin_layout LyX-Code
+	Nx=25 #size along x
+\end_layout
+
+\begin_layout LyX-Code
+	Ny=25 #size along y
+\end_layout
+
+\begin_layout LyX-Code
+	elec_size=10 #electrode size
+\end_layout
+
+\begin_layout LyX-Code
+	Niter=2000 #number of iterations to perform
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout LyX-Code
+#function to calculate potential
+\end_layout
+
+\begin_layout LyX-Code
+def potential_func(elec_size, Nx, Ny):
+\end_layout
+
+\begin_layout LyX-Code
+	#electrode assumed to be in the middle
+\end_layout
+
+\begin_layout LyX-Code
+	Nbegin = int((Nx-elec_size)/2)+1 #starting point of electrode
+\end_layout
+
+\begin_layout LyX-Code
+	Nend = Nbegin+ elec_size-1 #ending point of electrode
+\end_layout
+
+\begin_layout LyX-Code
+	phi = zeros((Ny,Nx)) #intialising potential matrix
+\end_layout
+
+\begin_layout LyX-Code
+	V0=1.0 #voltage of top electrode
+\end_layout
+
+\begin_layout LyX-Code
+	phi[0,Nbegin:(Nend+1)]=V0
+\end_layout
+
+\begin_layout LyX-Code
+	
+\end_layout
+
+\begin_layout LyX-Code
+	#calcutating error between two iteration
+\end_layout
+
+\begin_layout LyX-Code
+	errors = []
+\end_layout
+
+\begin_layout LyX-Code
+	iters = range(Niter)
+\end_layout
+
+\begin_layout LyX-Code
+	for k in iters:
+\end_layout
+
+\begin_layout LyX-Code
+		#copying phi
+\end_layout
+
+\begin_layout LyX-Code
+		oldphi = phi.copy()
+\end_layout
+
+\begin_layout LyX-Code
+		#updating phi
+\end_layout
+
+\begin_layout LyX-Code
+		phi[1:-1,1:-1]=0.25*(phi[1:-1,0:-2]+ phi[1:-1,2:]+ phi[0:-2,1:-1]+ phi[2:,1:-1]
+)
+\end_layout
+
+\begin_layout LyX-Code
+		#boundary conditions
+\end_layout
+
+\begin_layout LyX-Code
+		#at boundary electric field is 0, so value of phi at one edge off boundary
+ is same as boundary
+\end_layout
+
+\begin_layout LyX-Code
+		phi[1:-1,0]=phi[1:-1,1]
+\end_layout
+
+\begin_layout LyX-Code
+		phi[1:-1,-1]=phi[1:-1,-2]
+\end_layout
+
+\begin_layout LyX-Code
+		phi[0,:Nbegin]=phi[1,:Nbegin]
+\end_layout
+
+\begin_layout LyX-Code
+		phi[0,(Nend+1):]=phi[1,(Nend+1):]
+\end_layout
+
+\begin_layout LyX-Code
+		phi[-1,:Nbegin]=phi[-2,:Nbegin]
+\end_layout
+
+\begin_layout LyX-Code
+		phi[-1,(Nend+1):]=phi[-2,(Nend+1):]
+\end_layout
+
+\begin_layout LyX-Code
+		errors.append(fabs(phi-oldphi).max())
+\end_layout
+
+\begin_layout LyX-Code
+	return phi, errors	
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout LyX-Code
+#error estimation
+\end_layout
+
+\begin_layout LyX-Code
+def error_est(errors,Nx,Ny):
+\end_layout
+
+\begin_layout LyX-Code
+	V0=1.0
+\end_layout
+
+\begin_layout LyX-Code
+	iters = range(Niter)
+\end_layout
+
+\begin_layout LyX-Code
+	title('Evolution of errors with iteration')	
+\end_layout
+
+\begin_layout LyX-Code
+	xlabel('Iteration')
+\end_layout
+
+\begin_layout LyX-Code
+	ylabel('Error')
+\end_layout
+
+\begin_layout LyX-Code
+	semilogy(iters[::50],errors[::50],'ro')
+\end_layout
+
+\begin_layout LyX-Code
+	#calculating B for exponential fit
+\end_layout
+
+\begin_layout LyX-Code
+	a = ones((len(errors),2)) # allocate a matrix A with ones
+\end_layout
+
+\begin_layout LyX-Code
+	#first column is ones
+\end_layout
+
+\begin_layout LyX-Code
+	a[:,1] = iters #second column is iteration number
+\end_layout
+
+\begin_layout LyX-Code
+	b = np.log(errors)#result side is log of errors
+\end_layout
+
+\begin_layout LyX-Code
+	lst_sq = np.linalg.lstsq(a,b)[0] #least square approximation
+\end_layout
+
+\begin_layout LyX-Code
+	#A and B are found
+\end_layout
+
+\begin_layout LyX-Code
+	A = np.exp(lst_sq[0])
+\end_layout
+
+\begin_layout LyX-Code
+	B = lst_sq[1]
+\end_layout
+
+\begin_layout LyX-Code
+	#curve fit for errors = y found using A and B
+\end_layout
+
+\begin_layout LyX-Code
+	y = A*np.exp(B*array(iters))
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout LyX-Code
+	semilogy(iters,y,'r')
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout LyX-Code
+	#calculating B for exponential fit starting from 500th iteration for better
+ fit
+\end_layout
+
+\begin_layout LyX-Code
+	a = ones((len(errors)-500,2)) # allocate a matrix A with ones
+\end_layout
+
+\begin_layout LyX-Code
+	#first column is ones
+\end_layout
+
+\begin_layout LyX-Code
+	
+\end_layout
+
+\begin_layout LyX-Code
+	a[:,1] = iters[500:] #second column is iteration number
+\end_layout
+
+\begin_layout LyX-Code
+	b = np.log(errors[500:]) #result side is log of errors
+\end_layout
+
+\begin_layout LyX-Code
+	lst_sq = np.linalg.lstsq(a,b)[0]#least square approximation
+\end_layout
+
+\begin_layout LyX-Code
+	#A and B are found
+\end_layout
+
+\begin_layout LyX-Code
+	A = np.exp(lst_sq[0])
+\end_layout
+
+\begin_layout LyX-Code
+	B = lst_sq[1]
+\end_layout
+
+\begin_layout LyX-Code
+	print "Least square approximation: A=%f, B=%f" %(A, B)
+\end_layout
+
+\begin_layout LyX-Code
+	#curve fit for errors = y found using A and B
+\end_layout
+
+\begin_layout LyX-Code
+	y = A*np.exp(B*array(iters[500:]))
+\end_layout
+
+\begin_layout LyX-Code
+	semilogy(iters[500:],y,'g')
+\end_layout
+
+\begin_layout LyX-Code
+	legend(('error','fit 1','fit 2'))
+\end_layout
+
+\begin_layout LyX-Code
+	savefig('err_fit'+str(elec_size)+'.pdf',format='pdf')
+\end_layout
+
+\begin_layout LyX-Code
+	show()
+\end_layout
+
+\begin_layout LyX-Code
+	#expression for estimated error between potentials
+\end_layout
+
+\begin_layout LyX-Code
+	print "Final estimated error in potential: %f" %((-A/B)*np.exp(B*(2000.0+0.5)))
+\end_layout
+
+\begin_layout LyX-Code
+	#Surface plot for potential
+\end_layout
+
+\begin_layout LyX-Code
+	fig1=figure(2) # open a new figure
+\end_layout
+
+\begin_layout LyX-Code
+	ax=p3.Axes3D(fig1) # Axes3D is the means to do a surface plot
+\end_layout
+
+\begin_layout LyX-Code
+	x=arange(1,Nx+1) # create x and y axes
+\end_layout
+
+\begin_layout LyX-Code
+	y=arange(1,Ny+1)
+\end_layout
+
+\begin_layout LyX-Code
+	X,Y=meshgrid(x,y) # creates arrays out of x and y
+\end_layout
+
+\begin_layout LyX-Code
+	title('The 3-D surface plot of the potential')
+\end_layout
+
+\begin_layout LyX-Code
+	surf = ax.plot_surface(Y, X, phi, rstride=1, cstride=1, cmap=cm.jet,linewidth=0)
+\end_layout
+
+\begin_layout LyX-Code
+	savefig('surface_plot'+str(elec_size)+'.pdf',format='pdf')
+\end_layout
+
+\begin_layout LyX-Code
+	show()
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout LyX-Code
+	#Contour plot for potential
+\end_layout
+
+\begin_layout LyX-Code
+	fig2=figure(3)
+\end_layout
+
+\begin_layout LyX-Code
+	CS = contour(x, y, phi)
+\end_layout
+
+\begin_layout LyX-Code
+	clabel(CS, inline=1, fontsize=10)
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout LyX-Code
+	title('Contour plot for potential')
+\end_layout
+
+\begin_layout LyX-Code
+	savefig('contour_plot'+str(elec_size)+'.pdf',format='pdf')
+\end_layout
+
+\begin_layout LyX-Code
+	show()
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout LyX-Code
+	#current  density
+\end_layout
+
+\begin_layout LyX-Code
+	Jx=zeros((Ny,Nx))
+\end_layout
+
+\begin_layout LyX-Code
+	Jy=zeros((Ny,Nx))
+\end_layout
+
+\begin_layout LyX-Code
+	#calculating current density for inner matrix points by effectively differentia
+ting potential
+\end_layout
+
+\begin_layout LyX-Code
+	Jy[1:-1,1:-1]=0.5*(phi[0:-2,1:-1] - phi[2:,1:-1])
+\end_layout
+
+\begin_layout LyX-Code
+	Jx[1:-1,1:-1]=0.5*(phi[1:-1,0:-2] - phi[1:-1,2:])
+\end_layout
+
+\begin_layout LyX-Code
+	title('The vector plot of current flow')
+\end_layout
+
+\begin_layout LyX-Code
+	quiver(y,x,Jy.transpose(),Jx.transpose())
+\end_layout
+
+\begin_layout LyX-Code
+	savefig('curr_plot'+str(elec_size)+'.pdf',format='pdf')
+\end_layout
+
+\begin_layout LyX-Code
+	show()
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout LyX-Code
+	#finding total current
+\end_layout
+
+\begin_layout LyX-Code
+	curr_enter = sum(Jy[1,1:-1]) #adding current density in y-direction at
+ entry
+\end_layout
+
+\begin_layout LyX-Code
+	curr_exit = sum(Jy[-2,1:-1]) #adding current density in y-direction at
+ exit
+\end_layout
+
+\begin_layout LyX-Code
+	curr_avj = (curr_exit+curr_enter)/2.0 #average current 
+\end_layout
+
+\begin_layout LyX-Code
+	curr_diff = fabs(curr_enter-curr_exit) #diffenence or error in current
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout LyX-Code
+	print "Niter: %d Iavj=%f Idiff=%f" %(Niter, curr_avj, curr_diff)
+\end_layout
+
+\begin_layout LyX-Code
+	#finding resistance
+\end_layout
+
+\begin_layout LyX-Code
+	print "The resistance is thus approximated to be: %f ohms." %(V0/curr_avj)
+\end_layout
+
+\begin_layout LyX-Code
+	
+\end_layout
+
+\begin_layout LyX-Code
+	
+\end_layout
+
+\begin_layout LyX-Code
+#Mean square error in potential
+\end_layout
+
+\begin_layout LyX-Code
+def meansq_err(phi,Nx,Ny):	
+\end_layout
+
+\begin_layout LyX-Code
+	idx = zeros((Ny,Nx)) #initialising index matrix
+\end_layout
+
+\begin_layout LyX-Code
+	#creating a matrix which contains the y-index for phi marix
+\end_layout
+
+\begin_layout LyX-Code
+	idx[0:,]=np.array(range(Ny)) 
+\end_layout
+
+\begin_layout LyX-Code
+	idx = idx.transpose()
+\end_layout
+
+\begin_layout LyX-Code
+	idx=array(idx)
+\end_layout
+
+\begin_layout LyX-Code
+	phi=array(phi)
+\end_layout
+
+\begin_layout LyX-Code
+	#average least square error by finding sum of squares of errors 
+\end_layout
+
+\begin_layout LyX-Code
+	#and dividing by no.
+ of points at which potential is estimated(Nx*Ny)
+\end_layout
+
+\begin_layout LyX-Code
+	meansq_err = (1.0/(Nx*Ny))*sum((phi-1.0*((Ny-idx)/Ny))**2)
+\end_layout
+
+\begin_layout LyX-Code
+	return meansq_err
+\end_layout
+
+\begin_layout LyX-Code
+	
+\end_layout
+
+\begin_layout LyX-Code
+	
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout LyX-Code
+phi,errors=potential_func(elec_size,Nx,Ny)
+\end_layout
+
+\begin_layout LyX-Code
+error_est(errors,Nx,Ny)
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout LyX-Code
+phi,errors=potential_func(Nx,Nx,Ny) #elec_size = Nx
+\end_layout
+
+\begin_layout LyX-Code
+error_est(errors,Nx,Ny)
+\end_layout
+
+\begin_layout LyX-Code
+#comparing least square errors for diff values of Nx and Ny while maintaining
+ their ratio
+\end_layout
+
+\begin_layout LyX-Code
+lstsq_err(phi,Nx,Ny)
+\end_layout
+
+\begin_layout LyX-Code
+Nx=50
+\end_layout
+
+\begin_layout LyX-Code
+Ny=50
+\end_layout
+
+\begin_layout LyX-Code
+phi=potential_func(Nx,Nx,Ny)[0]
+\end_layout
+
+\begin_layout LyX-Code
+lstsq_err(phi,Nx,Ny)
+\end_layout
+
+\begin_layout LyX-Code
+Nx=100
+\end_layout
+
+\begin_layout LyX-Code
+Ny=100
+\end_layout
+
+\begin_layout LyX-Code
+phi=potential_func(Nx,Nx,Ny)[0]
+\end_layout
+
+\begin_layout LyX-Code
+error_lstsq =  lstsq_err(phi,Nx,Ny)
+\end_layout
+
+\begin_layout LyX-Code
+#plotting mean square error for different Nx and Ny
+\end_layout
+
+\begin_layout LyX-Code
+print "Mean square error for Nx=%d,Ny=%d and no.
+ of iterations = %d is %f" %(Nx,Ny,Niter,error_lstsq)
+\end_layout
+
+\begin_layout LyX-Code
+iters = range(Niter)
+\end_layout
+
+\begin_layout LyX-Code
+title('Evolution of errors with No.
+ of point of estimation')	
+\end_layout
+
+\begin_layout LyX-Code
+xlabel('Iteration')
+\end_layout
+
+\begin_layout LyX-Code
+ylabel('Error')
+\end_layout
+
+\begin_layout LyX-Code
+rng = range(10,51)
+\end_layout
+
+\begin_layout LyX-Code
+err=[]
+\end_layout
+
+\begin_layout LyX-Code
+for i in rng:
+\end_layout
+
+\begin_layout LyX-Code
+	err.append(meansq_err(potential_func(i,i,i)[0],i,i))
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout LyX-Code
+plot(rng,err)
+\end_layout
+
+\begin_layout LyX-Code
+savefig('err_plot.pdf',format='pdf')
+\end_layout
+
+\begin_layout LyX-Code
+show()
+\end_layout
+
+\begin_layout LyX-Code
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+PLOTS:
+\end_layout
+
+\begin_layout Subsubsection
+Error Curve Fitting for Electrode Length = 10
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "Error Fit(L=10)"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename err_fit10.pdf
+	scale 75
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Error Curve Fitting for Electrode Length = Edge Length(i.e.
+ 25)
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "Error Fit(N=25)"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename err_fit25.pdf
+	scale 75
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Surface Plot of Potential for Electrode Length = 10
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "Potential Surface(N=10)"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename surface_plot10.pdf
+	scale 75
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Surface Plot of Potential for Electrode Length = Edge Length(i.e.
+ 25)
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "Potential Surface(N=25)-1"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename surface_plot25.pdf
+	scale 75
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Contour Plot of Potential for Electrode Length = 10
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "Potential Contour(N=10)"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename contour_plot10.pdf
+	scale 75
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Contour Plot of Potential for Electrode Length = Edge Length(i.e.
+ 25)
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "Potential Contour(N=25)"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename contour_plot25.pdf
+	scale 75
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Current Density Plot of Potential for Electrode Length = 10
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "Current Density(N=10)"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename curr_plot10.pdf
+	scale 75
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Current Density Plot of Potential for Electrode Length = Edge Length(i.e.
+ 25)
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "Current Density(N=25)"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename curr_plot25.pdf
+	scale 75
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Plot of Mean square error in potential Vs.
+ Electrode Length(=EdgeLength)
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "Error Plot"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename err_plot.pdf
+	scale 75
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+ANALYSIS:
+\end_layout
+
+\begin_layout Enumerate
+The resistance, when electrode length =10 is approximated to be: 1.439799
+ ohms.
+ 
+\end_layout
+
+\begin_layout Enumerate
+On curve fitting for Least square approximation of error: A=0.002719, B=-0.004287
+ .
+\end_layout
+
+\begin_layout Enumerate
+Final estimated error in potential(as in Section 1.3.1): 0.000120 .
+\end_layout
+
+\begin_layout Enumerate
+For Niter: 2000 Iavj=0.958333 Idiff=0.000715 .
+\end_layout
+
+\begin_layout Enumerate
+The resistance, when electrode length = edge length(i.e.
+ 25) approximated to be: 1.043478 ohms.
+ 
+\end_layout
+
+\begin_layout Enumerate
+Mean square error for Nx=25,Ny=25 and no.
+ of iterations = 2000 is 0.000548.
+\end_layout
+
+\begin_layout Enumerate
+Mean square error for Nx=50,Ny=50 and no.
+ of iterations = 2000 is 0.004402.
+ 
+\end_layout
+
+\begin_layout Enumerate
+Mean square error for Nx=100,Ny=100 and no.
+ of iterations = 2000 is 0.076496.
+\end_layout
+
+\begin_layout Section
+RESULTS AND DISCUSSION:
+\end_layout
+
+\begin_layout Subsection
+.
+\end_layout
+
+\begin_layout LyX-Code
+This method is one of the slowest methods of reducing error in potential
+ estimation
+\end_layout
+
+\begin_layout LyX-Code
+because we are previously estimated potential(i.e.
+ previous iteration) to estimate
+\end_layout
+
+\begin_layout LyX-Code
+potential rather than a charcteristic of final potential to estimate potential.
+\end_layout
+
+\begin_layout Subsection
+.
+\end_layout
+
+\begin_layout LyX-Code
+In plot , the error is high for lower values of electrode length because
+ we don't
+\end_layout
+
+\begin_layout LyX-Code
+have known value of potential for enough points in the conductor.
+\begin_inset Newline newline
+\end_inset
+
+The error is high for higher values of electrode length because the number
+ of 
+\end_layout
+
+\begin_layout LyX-Code
+iterations, Niter=2000 is not high enough to compute potential accurately
+ at 
+\end_layout
+
+\begin_layout LyX-Code
+that high value of electrode length.
+\begin_inset Newline newline
+\end_inset
+
+Thus, the error vs.
+ electrode length approaches a minima where the value of 
+\end_layout
+
+\begin_layout LyX-Code
+potential is known for enough points and the number of iterations is sufficient
+\end_layout
+
+\begin_layout LyX-Code
+for that value of electrode length.
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document
